@@ -30,9 +30,9 @@ Citizen.CreateThread(function()
         if (IsPedInAnyVehicle(ped)) then
             local veh = GetVehiclePedIsIn(ped, false)
 
-            if (GetPedInVehicleSeat(veh, -1) == ped) then
-                if (GetVehicleCurrentGear(veh) > 0) then -- forward gears
-                    if (GetEntitySpeed(veh) > 0) then -- vehicle is moving
+            if (GetPedInVehicleSeat(veh, -1) == ped) then -- ped is driver?
+                if (GetEntitySpeed(veh) > 0) then -- vehicle is moving
+                    if (GetVehicleCurrentGear(veh) > 0) then -- forward gears
                         if ((IsControlPressed(2, 71) or IsDisabledControlPressed(2, 71)) and needPreventForward) then -- INPUT_VEH_ACCELERATE
                             SpeedSetter()
                         else
@@ -44,15 +44,7 @@ Citizen.CreateThread(function()
                         else
                             needPreventReverse = false
                         end
-                    else
-                        if (IsControlPressed(2, 72) and (needPreventReverse)) then
-                            SpeedSetter()
-                        else
-                            needPreventReverse = false
-                        end
-                    end
-                else    -- reverse gear (neutral also)
-                    if (GetEntitySpeed(veh) > 0) then
+                    else -- reverse gear (neutral also)
                         if ((IsControlPressed(2, 72) or IsDisabledControlPressed(2, 72)) and needPreventReverse) then -- INPUT_VEH_BRAKE
                             SpeedSetter()
                         else
@@ -65,13 +57,9 @@ Citizen.CreateThread(function()
                             needPreventForward = false
                             neutralGear = false
                         end
-                    else
-                        if (IsControlPressed(2, 72) and (needPreventReverse)) then
-                            SpeedSetter()
-                        else
-                            needPreventForward = false
-                        end
                     end
+                else -- vehicle is stopped
+                    neutralGear = true
                 end
             end
         else
