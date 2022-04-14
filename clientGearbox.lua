@@ -5,6 +5,7 @@ local neutralGear = true
 function ResetVariableStates()
     needPreventReverse = false
     needPreventForward = false
+    neutralGear = true
 end
 
 function SpeedSetter()
@@ -22,10 +23,10 @@ function SpeedSetter()
 end
 
 Citizen.CreateThread(function()
-    local ped = PlayerPedId()
-
     while true do
         Citizen.Wait(0)
+
+        local ped = PlayerPedId()
 
         if (IsPedInAnyVehicle(ped)) then
             local veh = GetVehiclePedIsIn(ped, false)
